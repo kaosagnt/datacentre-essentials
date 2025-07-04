@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# Pull the Zabbix Docker repos
+
+# %BEGIN_COPYRIGHT%
+#
+# Copyright 2025 Ian McWilliam (kaosagnt@gmail.com).
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# %END_COPYRIGHT%
+
+SCRIPT_DIR="$(dirname "$(readlink -f "${0}")")"
+
+# Source the Zabbix Environment settings
+#if [ -e "${SCRIPT_DIR}/env/zabbix_env" ]; then
+#	. "${SCRIPT_DIR}/env/zabbix_env"
+#fi
+
+ZBX_VER="7.0"
+
+if [ -z "${ZBX_VER}" ]; then
+	printf "ZBX_VER not defined\n"
+	exit 1
+fi
+
+# https://hub.docker.com/r/zabbix/zabbix-server-mysql/
+# https://hub.docker.com/r/zabbix/zabbix-web-apache-mysql/
+
+DOCKER_REPO=(
+	"zabbix/zabbix-server-mysql:ubuntu-${ZBX_VER}-latest" \
+	"zabbix/zabbix-web-apache-mysql:ubuntu-${ZBX_VER}-latest" \
+	"zabbix/zabbix-agent2:${ZBX_VER}-ubuntu-latest" \
+	"mariadb:lts"
+)
+
+# Define Functions
+repo_error() {
+
+	local _repo_name="${1}"
+
+	printf "\n%s%s\n\n" \
+		"${0##*/}: There was an issue pulling docker " \
+		"repo: ${_repo_name}"
+
+	echo -n "Do you want to continue? (y or n): "
+	read -r -n 2 CONTINUE_PULL
+	printf "\n"
+
+	case ${CONTINUE_PULL} in
+		[Yy]* ) ;;
+
+		* )	#echo "answer: ${CONTINUE_PULL}"
+			exit 1
+			;;
+	esac
+}
+
+# End Functions
+
+for repo in "${DOCKER_REPO[@]}"
+do
+	docker pull "${repo}"
+
+	[ $? -ne 0 ] && repo_error "${repo}"
+
+	printf "\n"
+done

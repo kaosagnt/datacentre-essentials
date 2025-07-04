@@ -1,0 +1,261 @@
+# Zabbix Docker Compose file
+# https://www.zabbix.com/container_images
+
+# Zabbix Server Container
+# Zabbix Apache Web Frontend Container
+# MariaDB Database Server Container
+# Internal Network connects all containers up the backend
+# External Network connects Web Frontend only
+
+# %BEGIN_COPYRIGHT%
+#
+# Copyright 2025 Ian McWilliam (kaosagnt@gmail.com).
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# %END_COPYRIGHT%
+
+services:
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:ubuntu-7.0-latest
+    container_name: zabbix-server
+    restart: unless-stopped
+    ports:
+      - "10051:10051"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./cnf/zabbix/etc/zabbix:/etc/zabbix:rw
+    links:
+      - mariadb-server:mariadb-server
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    deploy:
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    env_file:
+      - ./env/env_db_mariadb
+      - ./env/env_zabbix
+    environment:
+      #MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MARIADB_ROOT_PASSWORD
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+    secrets:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      #- MARIADB_ROOT_PASSWORD
+    depends_on:
+      mariadb-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pgrep", "zabbix_server"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      zabbix-int-net:
+        ipv4_address: 172.16.239.101
+        aliases:
+          - zabbix-server
+      zabbix-ext-net:
+        ipv4_address: 172.16.238.101
+    stop_grace_period: 30s
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65000
+      - net.ipv4.conf.all.accept_redirects=0
+      - net.ipv4.conf.all.secure_redirects=0
+      - net.ipv4.conf.all.send_redirects=0
+    labels:
+      com.zabbix.description: "Zabbix server with MySQL database support"
+      com.zabbix.component: "zabbix-server"
+      com.zabbix.dbtype: "MariaDB"
+      com.zabbix.os: "ubuntu"
+      com.zabbix.environment: "production"
+
+  zabbix-web:
+    container_name: zabbix-web
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-7.0-latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    links:
+      - mariadb-server:mariadb-server
+      - zabbix-server:zabbix-server
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
+        reservations:
+          cpus: "0.5"
+          memory: 256M
+    env_file:
+      - ./env/env_db_mariadb
+      - ./env/env_web
+    environment:
+      MYSQL_USER_FILE: /run/secrets/MYSQL_USER
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
+    secrets:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    depends_on:
+      mariadb-server:
+        condition: service_healthy
+      zabbix-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      zabbix-int-net:
+        ipv4_address: 172.16.239.102
+        aliases:
+          - zabbix-web
+      zabbix-ext-net:
+        ipv4_address: 172.16.238.102
+    stop_grace_period: 10s
+    labels:
+      com.zabbix.description: "Zabbix web-server with MySQL database support"
+      com.zabbix.component: "zabbix-web"
+      com.zabbix.webserver: "apache"
+      com.zabbix.dbtype: "mariadb"
+      com.zabbix.os: "ubuntu"
+      com.zabbix.environment: "production"
+
+  zabbix-agent:
+    container_name: zabbix-agent
+    image: zabbix/zabbix-agent2:7.0-ubuntu-latest
+    restart: unless-stopped
+    ports:
+      - "10051:10051"
+      - "10050:10050"
+    links:
+      - zabbix-server:zabbix-server
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./cnf/zabbix-agent/etc/zabbix/:/etc/zabbix/:ro
+    env_file:
+      - ./env/env_agent
+    privileged: true
+    pid: "host"
+    depends_on:
+      mariadb-server:
+        condition: service_healthy
+      zabbix-server:
+        condition: service_healthy
+      zabbix-web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pgrep",  "zabbix_agent2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      zabbix-int-net:
+        ipv4_address: 172.16.239.104
+        aliases:
+          - zabbix-agent
+          - zabbix-agent-passive
+    stop_grace_period: 5s
+    labels:
+      com.zabbix.description: "Zabbix agent"
+      com.zabbix.component: "zabbix-agentd"
+      com.zabbix.os: "ubuntu"
+
+  mariadb-server:
+    container_name: mariadb-server
+    image: mariadb:lts
+    restart: unless-stopped
+    #ports:
+      #- 3306:3306
+    volumes:
+      - ./cnf/mariadb:/etc/mysql/conf.d:ro
+      - /var/lib/zabbix-data/mariadb:/var/lib/mariadb:rw
+    #env_file:
+      #- ./env/env_db_mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/MARIADB_ROOT_PASSWORD
+    secrets:
+      #- MYSQL_USER
+      #- MYSQL_PASSWORD
+      - MARIADB_ROOT_PASSWORD
+    healthcheck:
+      test: [
+             "CMD",
+             "healthcheck.sh",
+             "--defaults-extra-file=/var/lib/mariadb/.my-healthcheck.cnf",
+             "--connect",
+             "--innodb_initialized"
+            ]
+      start_period: 1m
+      start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
+    networks:
+      zabbix-int-net:
+        ipv4_address: 172.16.239.103
+        aliases:
+          - mariadb-server
+          - mysql-server
+    labels:
+      com.zabbix.description: "MariaDB database for Zabbix Services"
+      com.zabbix.component: "zabbix-mariadb"
+      com.zabbix.dbtype: "mariadb"
+      com.zabbix.os: "ubuntu"
+      com.zabbix.environment: "production"
+
+networks:
+  zabbix-ext-net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+  zabbix-int-net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.239.0/24
+
+secrets:
+  MYSQL_USER:
+    file: ./env/MYSQL_USER
+  MYSQL_PASSWORD:
+    file: ./env/MYSQL_PASSWORD
+  MARIADB_ROOT_PASSWORD:
+    file: ./env/MARIADB_ROOT_PASSWORD

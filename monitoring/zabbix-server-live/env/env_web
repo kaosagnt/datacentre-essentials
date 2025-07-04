@@ -1,0 +1,2 @@
+ZBX_SERVER_HOST="zabbix-server"
+PHP_TZ="Australia/Sydney"

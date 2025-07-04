@@ -1,0 +1,58 @@
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+[mariadb]
+
+#ssl-ca = /etc/my.cnf.d/tls/ca-cert.pem
+#ssl-cert = /etc/my.cnf.d/tls/server-cert.pem
+#ssl-key = /etc/my.cnf.d/tls/server-key.pem
+#tls_version = TLSv1.2,TLSv1.3
+
+datadir=/var/lib/mariadb
+
+transaction_isolation="READ-COMMITTED"
+
+lower_case_table_names = 1
+
+# MariaDB
+# aria_pagecache_buffer_size should be same size as key_buffer_size.
+# default 128M
+#aria_pagecache_buffer_size = 128M
+# End MariaDB
+
+key_buffer_size = 128M
+sort_buffer_size = 4M
+myisam_sort_buffer_size = 64M
+join_buffer_size = 1M
+read_buffer_size = 1M
+read_rnd_buffer_size = 512K
+preload_buffer_size = 64K
+query_cache_size = 64M
+query_cache_limit = 10M
+thread_cache_size = 4
+table_open_cache = 2k
+tmp_table_size = 80M
+max_heap_table_size = 80M
+
+max_allowed_packet = 16M
+max_connections = 300
+net_buffer_length = 16K
+innodb_file_per_table = 1
+#myisam_use_mmap = on
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+# This group is only read by MariaDB-10.5 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mariadb-10.5]
+
+# MariaDB >= 10.0.5 / MySQL >= 5.6 InnoDB Full-Text
+innodb_ft_min_token_size = 2
+# MariaDB >= 10.1.x
+innodb-defragment=1

@@ -1,0 +1,2 @@
+DB_SERVER_HOST="mariadb-server"
+MYSQL_DATABASE="zabbix"
