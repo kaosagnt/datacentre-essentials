@@ -23,6 +23,14 @@ TODO:
 
 **NOTE:** All passwords presented here are examples and MUST be changed if using in production.
 
+### Datacentre Floor Plan
+
+[Plan PDF](./datacentre-floor-plan/DCE-Final-Project-Floor-Plan.pdf)
+
+[Plan PNG](./datacentre-floor-plan/DCE-Final-Project-Floor-Plan.png)
+
+
+
 ### Windows Server 2025
 
 - [Known Issues](windows-server/known-issues/known-issues-with-Microsoft-Windows-Server-2025.md)
@@ -32,9 +40,10 @@ TODO:
 
 ### PowerShell
 
+TODO:
+
 - [Usefull Powershell commands]()
 
-TODO:
 ### Monitoring with Zabbix on Ubuntu 24.04.2 using Docker Containers
 
 <ul>
@@ -53,6 +62,10 @@ TODO:
 		<li><a href="./monitoring/Ubuntu-Zabbix-server.md#zdcdoc">Zabbix Docker Container Documentation</a></li>
 	</ul>
 </ul>
+
+
+TODO:
+
 <ul>
 	<li>Windows Server 2025 / Hyper-V 2019 Monitoring</li>
 	<ul>
