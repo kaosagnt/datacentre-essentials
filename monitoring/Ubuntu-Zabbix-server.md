@@ -421,7 +421,7 @@ depends_on:
 
 ---
 
-ladmin@dca-mon01:~$ sudo bash
+	ladmin@dca-mon01:~$ sudo bash
 [sudo] password for ladmin: 
 
 ```
@@ -435,9 +435,9 @@ drwx------ 2 zabbix zabbix  147 Mar 31 20:52 env
 -rwxr-x--- 1 zabbix zabbix 1928 Apr  6 17:21 pull-docker-repo
 ```
 
-root@dca-mon01:/home/ladmin# cd /var/lib/zabbix-data/zabbix-server-live/
+	root@dca-mon01:/home/ladmin# cd /var/lib/zabbix-data/zabbix-server-live/
 
-root@dca-mon01:/var/lib/zabbix-data/zabbix-server-live# docker compose down
+	root@dca-mon01:/var/lib/zabbix-data/zabbix-server-live# docker compose down
 
 ```
 [+] Running 6/6
