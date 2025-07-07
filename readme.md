@@ -25,10 +25,7 @@ TODO:
 
 ### Datacentre Floor Plan
 
-[Plan PDF](./datacentre-floor-plan/DCE-Final-Project-Floor-Plan.pdf)
-
-[Plan PNG](./datacentre-floor-plan/DCE-Final-Project-Floor-Plan.png)
-
+[Floor Plan PDF](./datacentre-floor-plan/DCE-Final-Project-Floor-Plan.pdf)
 
 
 ### Windows Server 2025
