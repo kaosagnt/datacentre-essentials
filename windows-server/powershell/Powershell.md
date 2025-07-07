@@ -18,10 +18,12 @@ Check if the rule exists
 
 	Get-NetFirewallRule | Where-Object Name -Like 'ICMPv4'
 
-Enable / Disable rule
+Enable rule:
 
 	Enable-NetFirewallRule -Name 'ICMPv4'
 
+
+Disable rule:
 
 	Disable-NetFirewallRule -Name 'ICMPv4'
 
