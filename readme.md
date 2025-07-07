@@ -40,9 +40,7 @@ TODO:
 
 ### PowerShell
 
-TODO:
-
-- [Usefull Powershell commands]()
+- [Usefull Powershell commands](./windows-server/powershell/Powershell.md)
 
 ### Monitoring with Zabbix on Ubuntu 24.04.2 using Docker Containers
 
