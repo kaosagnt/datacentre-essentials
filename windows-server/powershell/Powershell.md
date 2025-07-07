@@ -22,6 +22,7 @@ Enable / Disable rule
 
 	Enable-NetFirewallRule -Name 'ICMPv4'
 
+
 	Disable-NetFirewallRule -Name 'ICMPv4'
 
 
