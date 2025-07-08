@@ -36,7 +36,6 @@ ilouser: !Tafe@nsw2025
 Restful iLO tools: [https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000093](https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000093)
 
 ```
-
 Additional Drivers:
 
 Broadcom NIC.exe
@@ -52,7 +51,7 @@ Storage Fibre channel over ETH.exe
 ```
 
 ---
-iLO Configuration
+iLO Switch Configuration
 
 ```
 iLO Switch: 3 (192.168.99.233)
@@ -72,7 +71,7 @@ exit
 write memory
 ```
 
--------
+---
 Cisco Switch Configuration
 
 ```
