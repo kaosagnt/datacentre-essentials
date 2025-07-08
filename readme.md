@@ -31,6 +31,7 @@ TODO:
 ### Windows Server 2025
 
 - [Known Issues](windows-server/known-issues/known-issues-with-Microsoft-Windows-Server-2025.md)
+- [Windows SID reset](./windows-server/SID-reset.md)
 - [UNP - User Principal Name](windows-server/UNP-User-Principal-Name.md)
 - [Windows Server Network Time Protocol (NTP) Server](windows-server/set-network-time-protocol-server.md)
 
