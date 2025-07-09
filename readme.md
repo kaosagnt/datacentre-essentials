@@ -41,6 +41,7 @@ TODO:
 TODO:
 
 - [Bare Metal Server 1](./documentation-examples/Final-Project-Bare-Metal-Server-1.md)
+- [Bare Metal Server 3](./documentation-examples/Final-Project-Bare-Metal-Server-3.md)
 
 ### PowerShell
 
