@@ -143,7 +143,7 @@ Global Catalog: enabled
 
 DSRM Password: Route2025!
 
-Create DNS Delegation: no
+Create DNS Delegation: yes
 Netbios name: DCA
 ```
 
