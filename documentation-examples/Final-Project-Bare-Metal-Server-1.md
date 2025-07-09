@@ -12,7 +12,7 @@ Type: HPE ProLiant Server DL360 Gen9
 
 ```
 
-Documentation: [https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000078](https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000078)
+Documentation: <https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000078>
 
 ```
 Defaults:
@@ -33,7 +33,7 @@ iLO Gateway: 192.168.99.254 / 24
 ilouser: !Tafe@nsw2025
 ```
 
-Restful iLO tools: [https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000093](https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000093)
+Restful iLO tools: <https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1010007891&tab=driversAndSoftware&manualsFilter=66000035&driversAndSoftwareFilter=8000093>
 
 ```
 Additional Drivers:
@@ -109,7 +109,7 @@ Interface: HP InfiniBand FDR/Ethernet 10GB/40GB 2 port 544+ FLR-QS Ethernet Adap
 Embedded Flexible LOM Port: 1
 ```
 
-HPE FDR InfiniBand Adapter Manual: [https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1008852053&tab=manuals](https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1008852053&tab=manuals)
+HPE FDR InfiniBand Adapter Manual: <https://support.hpe.com/connect/s/product?language=en_US&kmpmoid=1008852053&tab=manuals>
 
 ```
 Additional Drivers:
@@ -263,7 +263,7 @@ Accept SNMP from hosts:
 Nagios Monitoring
 
 Installation Instructions:
-[https://assets.nagios.com/downloads/ncpa/docs/Installing-NCPA.pdf](https://assets.nagios.com/downloads/ncpa/docs/Installing-NCPA.pdf)
+<https://assets.nagios.com/downloads/ncpa/docs/Installing-NCPA.pdf>
 
 NCPA Client
 
