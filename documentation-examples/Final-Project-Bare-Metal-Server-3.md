@@ -128,6 +128,28 @@ ON:
 
 
 ---
+
+Open ICMP port for ping (IPv4) for testing connectivity
+
+Powershell Console:
+ 
+	New-NetFirewallRule -Name 'ICMPv4' -DisplayName 'ICMPv4' -Description 'Allow ICMPv4 Ping' -Profile Any -Direction Inbound  -Action Allow -Protocol ICMPv4 -Program Any -LocalAddress Any -RemoteAddress Any 
+
+Check rule
+
+	Get-NetFirewallRule | Where-Object Name -Like 'ICMPv4'
+
+Enable rule:
+
+	Enable-NetFirewallRule -Name 'ICMPv4'
+
+Disable rule:
+
+	Disable-NetFirewallRule -Name 'ICMPv4'
+
+
+---
+
 Hyper-V Managment
 
 sconfig Utility
