@@ -99,6 +99,7 @@ Windows Hyper-V 2019
 ```
 Administrator: !Tafe@nsw2025
 
+Name: BMS03
 IPv4: 192.168.10.12 /24
 Gateway: 192.168.10.254
 AD Domain: dca.local
@@ -246,7 +247,7 @@ To set up a host on Zabbix Server, go to the Zabbix frontend and go to Data coll
 
 Then, click Create host (located in the top right) and configure the following details:
 
-- The hostname (DESKTOP-D75R1IG)
+- The hostname (BMS03)
 - An identifying display name (such as ‘Windows Server’)
 - The template (select ‘Windows by Zabbix Agent’)
 - The group (assigns the server to an appropriate group)

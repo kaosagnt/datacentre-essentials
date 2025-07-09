@@ -342,13 +342,13 @@ To set up a host on Zabbix Server, go to the Zabbix frontend and go to Data coll
 
 Then, click Create host (located in the top right) and configure the following details:
 
-- The hostname (DESKTOP-D75R1IG)
+- The hostname (SRV01)
 - An identifying display name (such as ‘Windows Server’)
 - The template (select ‘Windows by Zabbix Agent’)
 - The group (assigns the server to an appropriate group)
 - The interface (choose the agent monitoring option and enter the IP of the server)
 
-To install Zabbix Agent 2 client on Hyper-V host:
+To install Zabbix Agent 2 client on Windows Sever 2025 host:
 
 Map a network share to p: drive where the zabbix_agent2-7.0.11-windows-amd64-openssl.msi
 lives.
