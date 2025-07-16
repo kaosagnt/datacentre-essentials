@@ -251,7 +251,6 @@ Trap Destinations:
 
 Send Auth:
 accepted community name: craptrap / RO
-``
 
 Accept SNMP from hosts:
 192.168.10.30
