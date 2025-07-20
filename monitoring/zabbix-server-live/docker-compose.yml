@@ -195,7 +195,7 @@ services:
     image: mariadb:lts
     restart: unless-stopped
     #ports:
-      #- 3306:3306
+      #- "3306:3306"
     volumes:
       - ./cnf/mariadb:/etc/mysql/conf.d:ro
       - /var/lib/zabbix-data/mariadb:/var/lib/mariadb:rw
