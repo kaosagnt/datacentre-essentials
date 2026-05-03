@@ -472,6 +472,89 @@ zabbix-server    zabbix/zabbix-server-mysql:ubuntu-7.0-latest       "/usr/bin/do
 zabbix-web       zabbix/zabbix-web-apache-mysql:ubuntu-7.0-latest   "docker-entrypoint.sh"   zabbix-web       About a minute ago   Up About a minute (healthy)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 0.0.0.0:8443->8443/tcp, :::8443->8443/tcp
 ```
 
+---
+
+**NOTE1:** Zabbix Docker Container updates change the Zabbix user and group ID
+
+```
+Zabbix server version	7.0.25
+
+Tag: ubuntu-7.0-latest
+Build Date: May 1, 2026 at 3:51 pm
+```
+
+After pulling the latest Zabbix Docker container, The Zabbix server and Zabbix Agent may fail to run due to the user and group not being able to write to the /etc/zabbix directories.
+
+```
+docker compose logs zabbix-agent
+
+zabbix-agent  | sed: couldn't open temporary file /etc/zabbix/sedASatXv: Read-only file system
+zabbix-agent  | 2026-05-03T03:40:49Z [info]: ** Preparing Zabbix agent 2
+zabbix-agent  | 2026-05-03T03:40:49Z [info]: ** Using 'zabbix-server' servers for passive checks
+zabbix-agent  | sed: couldn't open temporary file /etc/zabbix/sed7tucng: Read-only file system
+```
+
+```
+docker compose logs zabbix-server
+
+s. Please be careful with database COLLATE!
+zabbix-server  | 2026-05-03T01:15:53Z [warning]: ** Table 'zabbix.dbversion' already exists.
+zabbix-server  | 2026-05-03T01:15:53Z [info]: ** Preparing Zabbix server configuration file
+zabbix-server  | 2026-05-03T01:15:53Z [info]: ** Updating /etc/zabbix/zabbix_server.conf parameter 'DBHost': 'mariadb-server'... exists
+zabbix-server  | 2026-05-03T01:15:53Z [info]: ** Updating /etc/zabbix/zabbix_server.conf parameter 'DBPort': '3306'... exists
+zabbix-server  | sed: couldn't open temporary file /etc/zabbix/sedscdwfl: Permission denied
+```
+
+
+Ubuntu Server Zabbix user and group:
+
+User:	zabbix:x:110:111::/var/lib/zabbix-data:/usr/sbin/nologin
+
+Group:	zabbix:x:111:
 
 
 
+Zabbix Container updates user and group are now:
+
+User:	zabbix:x:1997:1995:Zabbix monitoring system:/var/lib/zabbix:/sbin/nologin
+
+Group:	zabbix:x:1995:
+
+To fix the issue:
+
+```
+docker compose down
+
+groupmod -g 1995 zabbix
+usermod -u 1997 -g 1995 zabbix
+
+find /var/lib/zabbix-data -user 110 -exec chown -h 1997:1995 {} \;
+find /var/lib/zabbix-data -user 1997 -exec chown -h 1997:1995 {} \;
+```
+
+The docker-compose.yaml file needs to change the zabbix-agents etc mapping from read only to read write as the agent now need write access.
+
+```
+--- a/monitoring/zabbix-server-live/docker-compose.yml
++++ b/monitoring/zabbix-server-live/docker-compose.yml
+@@ -160,7 +160,7 @@ services:
+     volumes:
+       - /etc/localtime:/etc/localtime:ro
+       - /etc/timezone:/etc/timezone:ro
+-      - ./cnf/zabbix-agent/etc/zabbix/:/etc/zabbix/:ro
++      - ./cnf/zabbix-agent/etc/zabbix/:/etc/zabbix/:rw
+     env_file:
+       - ./env/env_agent
+     privileged: true
+
+```
+
+The docker-compose.yml file has been updated to reflect this. Just copy that over the existing compose file.
+
+Restart Zabbix
+
+```
+docker compose up -d
+```
+
+You may need to restart the ubuntu server for the user and group ID changes to be picked up.

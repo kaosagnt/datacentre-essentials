@@ -160,7 +160,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - ./cnf/zabbix-agent/etc/zabbix/:/etc/zabbix/:ro
+      - ./cnf/zabbix-agent/etc/zabbix/:/etc/zabbix/:rw
     env_file:
       - ./env/env_agent
     privileged: true
@@ -195,7 +195,7 @@ services:
     image: mariadb:lts
     restart: unless-stopped
     #ports:
-      #- "3306:3306"
+      #- 3306:3306
     volumes:
       - ./cnf/mariadb:/etc/mysql/conf.d:ro
       - /var/lib/zabbix-data/mariadb:/var/lib/mariadb:rw
